@@ -25,9 +25,9 @@
         <!-- 用户组 -->
 
         <el-form-item label="用户组" prop="usergroup">
-          <el-select v-model="value" placeholder="请选择用户组">
-            <el-option label="高级管理员" value="高级管理员"></el-option>
-            <el-option label="普通管理员" value="普通管理员"></el-option>
+          <el-select v-model="addForm.usergroup" placeholder="请输入用户组">
+            <el-option value="高级管理员">高级管理员</el-option>
+            <el-option value="普通管理员">普通管理员</el-option>
           </el-select>
         </el-form-item>
         <!-- 按钮 -->
@@ -51,7 +51,7 @@ export default {
       addForm: {
         account: "",
         password: "",
-        usergroup: ["高级管理员", "普通管理员"]
+        usergroup: ""
       },
       rules: {
         account: { required: true, message: "请输入账号", trigger: "blur" },
