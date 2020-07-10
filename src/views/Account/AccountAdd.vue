@@ -41,12 +41,31 @@
 </template>
 
 <script>
+import { Acc_Reg, Pwd_Reg } from "@/utils/reg";
 import Panel from "@/components/Panel/Panel.vue";
 export default {
   components: {
     Panel
   },
   data() {
+    const accValidate = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入账号"));
+      } else if (!Acc_Reg.test(value)) {
+        callback(new Error("3到12位（字母，数字，下划线，减号)"));
+      } else {
+        callback();
+      }
+    };
+    const pwdValidate = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入密码"));
+      } else if (!Pwd_Reg.test(value)) {
+        callback(new Error("3到12位（字母，数字，下划线，减号)"));
+      } else {
+        callback();
+      }
+    };
     return {
       addForm: {
         account: "",
@@ -54,8 +73,8 @@ export default {
         usergroup: ""
       },
       rules: {
-        account: { required: true, message: "请输入账号", trigger: "blur" },
-        password: { required: true, message: "请输入密码", trigger: "blur" },
+        account: { required: true, validator: accValidate, trigger: "blur" },
+        password: { required: true, validator: pwdValidate, trigger: "blur" },
         usergroup: {
           required: true,
           message: "请输入用户组",

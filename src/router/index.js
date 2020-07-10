@@ -2,6 +2,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+// 解决重复跳转到自己警告让人难受的问题
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch((err) => err);
+};
+
 import Login from "@/views/Login.vue"
 import Layout from "@/views/Layout/Layout.vue"
 
