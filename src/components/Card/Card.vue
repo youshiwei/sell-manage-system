@@ -1,9 +1,9 @@
 <template>
   <div class="item">
-    <span class="iconfont" :class="record.icon" :id="record.color"></span>
+    <span class="iconfont" :class="CardItem.icon" :id="CardItem.color"></span>
     <div>
-      <h1>{{ record.title }}</h1>
-      <p>{{ record.value }}</p>
+      <h1>{{ CardItem.title }}</h1>
+      <p>{{ CardItem.value }}</p>
     </div>
   </div>
 </template>
@@ -11,7 +11,7 @@
 <script>
 export default {
   props: {
-    record: {
+    CardItem: {
       type: Object,
       require: true
     }
@@ -21,6 +21,8 @@ export default {
 
 <style lang="less" scoped>
 .item {
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px #ccc;
   box-sizing: border-box;
   padding: 0 40px;
   display: flex;

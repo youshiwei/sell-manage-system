@@ -1,21 +1,21 @@
 <template>
   <div class="home">
     <div class="record">
-      <Item v-for="(v,i) in record" :key="i" :record="v"></Item>
+      <Card v-for="item in CardData" :key="item.title" :CardItem="item"></Card>
     </div>
     <div ref="dataEcharts" class="total-data"></div>
   </div>
 </template>
 
 <script>
-import Item from "@/components/RecordItem.vue";
+import Card from "@/components/Card/Card.vue";
 export default {
   components: {
-    Item
+    Card
   },
   data() {
     return {
-      record: [
+      CardData: [
         {
           title: "总订单",
           value: "102,400",
