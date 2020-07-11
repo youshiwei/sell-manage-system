@@ -4,7 +4,7 @@
  */
 export default {
     get(key) {
-        return JOSON.parse(localStorage.getItem(key))
+        return JSON.parse(localStorage.getItem(key))
     },
     set(key, val) {
         localStorage.setItem(key, JSON.stringify(val))
