@@ -10,6 +10,8 @@ VueRouter.prototype.push = function push(location) {
 
 import Login from "@/views/Login.vue"
 import Layout from "@/views/Layout/Layout.vue"
+import local from "@/utils/local"
+
 
 /**
  * 路由配置
@@ -144,4 +146,23 @@ const router = new VueRouter({
   routes
 })
 
+/* 路由守卫 */
+router.beforeEach((to, from, next) => {
+  /* 
+    to:你要去哪儿 【你要去的目标路由对象】
+    from:你从哪儿来 【你离开的路由对象】
+    next:走吧，放行 【函数】
+   */
+  // 判断是否登录
+  let isLogin = local.get("t_k") ? true : false
+  if (isLogin) {
+    next(); //如果已经登录，直接放行
+  } else {
+    if (to.path === "/login") {
+      next();//放行
+    } else {
+      next({ path: "/login" })//没有登录，去任何页面都会重置到登录页
+    }
+  }
+})
 export default router

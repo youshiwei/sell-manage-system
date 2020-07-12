@@ -38,7 +38,7 @@ export default {
       if (!value) {
         callback(new Error("请输入账号"));
       } else if (!Acc_Reg.test(value)) {
-        callback(new Error("3到12位（字母，数字，下划线，减号)"));
+        callback(new Error("3到12位（字母，数字，下划线，中文)"));
       } else {
         callback();
       }

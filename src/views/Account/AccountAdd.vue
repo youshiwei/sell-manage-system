@@ -24,8 +24,8 @@
 
         <!-- 用户组 -->
 
-        <el-form-item label="用户组" prop="usergroup">
-          <el-select v-model="addForm.usergroup" placeholder="请输入用户组">
+        <el-form-item label="用户组" prop="userGroup">
+          <el-select v-model="addForm.userGroup" placeholder="请输入用户组">
             <el-option value="高级管理员">高级管理员</el-option>
             <el-option value="普通管理员">普通管理员</el-option>
           </el-select>
@@ -43,6 +43,7 @@
 <script>
 import { Acc_Reg, Pwd_Reg } from "@/utils/reg";
 import Panel from "@/components/Panel/Panel.vue";
+import { addAccount } from "@/api/account";
 export default {
   components: {
     Panel
@@ -52,7 +53,7 @@ export default {
       if (!value) {
         callback(new Error("请输入账号"));
       } else if (!Acc_Reg.test(value)) {
-        callback(new Error("3到12位（字母，数字，下划线，减号)"));
+        callback(new Error("3到12位（字母，数字，下划线，中文)"));
       } else {
         callback();
       }
@@ -70,12 +71,12 @@ export default {
       addForm: {
         account: "",
         password: "",
-        usergroup: ""
+        userGroup: ""
       },
       rules: {
         account: { required: true, validator: accValidate, trigger: "blur" },
         password: { required: true, validator: pwdValidate, trigger: "blur" },
-        usergroup: {
+        userGroup: {
           required: true,
           message: "请输入用户组",
           trigger: "change"
@@ -85,9 +86,12 @@ export default {
   },
   methods: {
     submitForm() {
-      this.$refs.addForm.validate(val => {
+      this.$refs.addForm.validate(async val => {
         if (val) {
-          console.log("可以添加");
+          let { code } = await addAccount(this.addForm);
+          if (code === 0) {
+            this.$router.push("/account/account-list");
+          }
         } else {
           console.log("无法提交");
         }
