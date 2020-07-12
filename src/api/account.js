@@ -24,3 +24,7 @@ export function delAccount(params) {
 export function editAccount(params) {
     return req.post("users/edit", params)
 }
+/* 批量删除 */
+export function batchDelAccount(params) {
+    return req.get("users/batchdel", params)
+}

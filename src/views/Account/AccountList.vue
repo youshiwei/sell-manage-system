@@ -4,7 +4,13 @@
     <h1 slot="title">账户列表</h1>
     <!-- 内容 -->
     <div slot="content">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
+      <el-table
+        ref="multipleTable"
+        @selection-change="handleSelectionChange"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+      >
         <!-- 选择框 -->
         <el-table-column type="selection" width="55"></el-table-column>
         <!-- 账号 -->
@@ -35,7 +41,7 @@
 
       <!-- 批量删除和取消全选 -->
       <div style="margin-top:20px;">
-        <el-button type="danger" size="small">批量删除</el-button>
+        <el-button type="danger" @click="batchDel" size="small">批量删除</el-button>
         <el-button type="primary" size="small">取消全选</el-button>
       </div>
       <!-- 编辑模态框 -->
@@ -46,7 +52,7 @@
           </el-form-item>
           <el-form-item label="用户组">
             <el-select v-model="editForm.userGroup">
-              <el-option value="超级管理员">超级管理员</el-option>
+              <el-option value="高级管理员">高级管理员</el-option>
               <el-option value="普通管理员">普通管理员</el-option>
             </el-select>
           </el-form-item>
@@ -63,13 +69,19 @@
 <script>
 import Panel from "@/components/Panel/Panel.vue";
 import Moment from "moment";
-import { getAccountList, delAccount, editAccount } from "@/api/account";
+import {
+  getAccountList,
+  delAccount,
+  editAccount,
+  batchDelAccount
+} from "@/api/account";
 export default {
   components: {
     Panel
   },
   data() {
     return {
+      ids: "",
       dialogVisible: false,
       currentPage: 1, //当前页
       pageSize: 3, //每页条数
@@ -124,7 +136,7 @@ export default {
     // 删除
     handleDelete(id) {
       // 优化删除体验
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -142,12 +154,45 @@ export default {
           });
         });
     },
-
+    // 当选择项发生变化时会触发该事件
+    handleSelectionChange(rows) {
+      this.ids = rows.map(v => v.id);
+      console.log(this.ids);
+    },
+    // 点击批量删除
+    batchDel() {
+      // 优化删除体验
+      if (!this.ids) {
+        this.$message.error("请先勾选要删除的数据");
+        return;
+      }
+      // 删除确认提醒
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          let { code } = await batchDelAccount({
+            ids: JSON.stringify(this.ids)
+          });
+          if (code === 0) {
+            this.getData(); //重新渲染表格
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    // 改变每页条数触发
     handleSizeChange(size) {
       this.pageSize = size;
       this.getData();
     },
-
+    // 改变当前页触发
     handleCurrentChange(current) {
       this.currentPage = current;
       this.getData();

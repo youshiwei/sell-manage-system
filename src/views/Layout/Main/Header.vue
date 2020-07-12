@@ -12,14 +12,14 @@
       </el-col>
       <el-col :span="12">
         <div class="user">
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               你好，微微
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item to="{path:'/account/personal'}">个人中心</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item command="personal">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import local from "@/utils/local";
 export default {
   data() {
     return {
@@ -49,6 +50,16 @@ export default {
         }
       });
       this.breadArr = arr;
+    },
+    // 点击下拉菜单选项
+    handleCommand(cmd) {
+      if (cmd == "personal") {
+        this.$router.push("/account/personal");
+      } else {
+        this.$message({ type: "success", message: "哥哥，欢迎下次再来！" });
+        local.clear(); //清空本地
+        this.$router.push("/login"); //跳转到登录
+      }
     }
   },
   created() {

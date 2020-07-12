@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="record">
-      <Card v-for="item in CardData" :key="item.title" :CardItem="item"></Card>
+      <Card class="card" v-for="item in CardData" :key="item.title" :CardItem="item"></Card>
     </div>
     <div ref="dataEcharts" class="total-data"></div>
   </div>
@@ -127,11 +127,21 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    .card {
+      width: calc(25% - 15px);
+    }
   }
   .total-data {
     width: 100%;
     background-color: #fff;
     height: 400px;
   }
+  // @media screen and (max-width: 1200px) {
+  //   .total-data {
+  //     width: 100%;
+  //     background-color: #fff;
+  //     height: 400px;
+  //   }
+  // }
 }
 </style>

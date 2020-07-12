@@ -24,14 +24,14 @@ export default {
   border-radius: 3px;
   box-shadow: 0px 0px 5px #ccc;
   box-sizing: border-box;
-  padding: 0 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background: #fff;
-  width: 300px;
   height: 100px;
   span {
+    flex: 0 0 50%;
+    display: flex;
+    justify-content: center;
     font-size: 50px;
     &#blue {
       color: blue;
@@ -51,6 +51,44 @@ export default {
     line-height: 30px;
     h1 {
       color: #aaa;
+    }
+  }
+}
+
+@media screen and(max-width:1000px) {
+  .item {
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    height: 100px;
+    span {
+      flex: 0 0 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 50px;
+      &#blue {
+        color: blue;
+      }
+      &#skyblue {
+        color: skyblue;
+      }
+      &#green {
+        color: green;
+      }
+      &#purple {
+        color: purple;
+      }
+    }
+    div {
+      text-align: center;
+      line-height: 25px;
+      h1 {
+        color: #aaa;
+      }
     }
   }
 }

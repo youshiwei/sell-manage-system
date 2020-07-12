@@ -83,6 +83,7 @@ export default {
   },
   data() {
     return {
+      fit: "",
       dialogImageUrl: "",
       dialogVisible: true,
       fileList: [
@@ -114,7 +115,8 @@ export default {
     },
     handlePreview(file) {
       console.log(file);
-    }
+    },
+    handlePictureCardPreview() {}
   }
 };
 </script>
