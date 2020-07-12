@@ -47,6 +47,10 @@ export default {
     }
   }
   div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     text-align: center;
     line-height: 30px;
     h1 {
@@ -84,6 +88,10 @@ export default {
       }
     }
     div {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
       text-align: center;
       line-height: 25px;
       h1 {

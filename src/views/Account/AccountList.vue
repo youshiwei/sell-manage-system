@@ -42,7 +42,7 @@
       <!-- 批量删除和取消全选 -->
       <div style="margin-top:20px;">
         <el-button type="danger" @click="batchDel" size="small">批量删除</el-button>
-        <el-button type="primary" size="small">取消全选</el-button>
+        <el-button type="primary" size="small" @click="cancelSelectionAll">取消全选</el-button>
       </div>
       <!-- 编辑模态框 -->
       <el-dialog title="账号编辑" :visible.sync="dialogVisible" width="30%">
@@ -186,6 +186,10 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    //取消全选
+    cancelSelectionAll() {
+      this.$refs.multipleTable.clearSelection();
     },
     // 改变每页条数触发
     handleSizeChange(size) {

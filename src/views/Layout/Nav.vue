@@ -1,5 +1,9 @@
 <template>
   <div class="nav">
+    <div class="shop-name">
+      <img src="@/assets/imgs/food.svg" alt />
+      <span>大米先生</span>
+    </div>
     <el-menu
       :default-active="curActive"
       class="el-menu-vertical-demo"
@@ -93,8 +97,26 @@ export default {
 
 <style lang="less" scoped>
 .nav {
+  padding-top: 20px;
   flex: 0 0 200px;
   background-color: #304156;
+  .shop-name {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    align-items: center;
+    img {
+      flex: 0 0 50%;
+      display: flex;
+      justify-content: center;
+    }
+    span {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+  }
   .el-menu {
     border-right: none;
     .el-submenu .el-menu-item {

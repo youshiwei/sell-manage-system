@@ -14,7 +14,7 @@
         <div class="user">
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              你好，微微
+              你好，黑土西西
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -22,7 +22,7 @@
               <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+          <el-avatar src="@/assets/imgs/we.jpg"></el-avatar>
         </div>
       </el-col>
     </el-row>
