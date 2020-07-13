@@ -40,4 +40,8 @@ export function modifyPwd(params) {
 export function getPersonalInfo() {
     return req.get("users/info")
 }
+/* 获取用户信息 */
+export function avatarEdit(params) {
+    return req.get("users/avataredit", params)
+}
 

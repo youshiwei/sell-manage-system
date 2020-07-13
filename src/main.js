@@ -16,6 +16,9 @@ import "@/assets/css/reset.css"
 import echarts from "echarts"
 Vue.prototype.$echarts = echarts
 
+// 中介模式 :在原型上挂载一个bus
+Vue.prototype.$bus = new Vue()
+
 Vue.config.productionTip = false
 
 new Vue({

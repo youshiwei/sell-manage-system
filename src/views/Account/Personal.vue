@@ -20,19 +20,19 @@
         创建时间：
         <span>{{ userinfo.ctime | timeformat}}</span>
       </p>
-      <div class="avatar">
+      <div class="avatar-box">
         管理员头像：
         <el-upload
           class="avatar-uploader"
-          action="https://127.0.0.1:5000/users/avatar_upload"
-          :show-file-list="false"
+          action="http://127.0.0.1:5000/users/avatar_upload"
           :on-success="handleAvatarSuccess"
+          :show-file-list="false"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <img v-if="imgUrl" :src="imgBaseUrl+imgUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <el-button type="primary" size="small">确认修改</el-button>
+        <el-button @click="modifyAvatar" type="primary" size="small">确认修改</el-button>
       </div>
     </div>
   </Panel>
@@ -42,26 +42,31 @@
 import Panel from "@/components/Panel/Panel.vue";
 import local from "@/utils/local";
 import Moment from "moment";
+import { avatarEdit } from "@/api/account";
 export default {
   components: {
     Panel
   },
   data() {
     return {
-      userinfo: {}
+      userinfo: {},
+      imgUrl: "", //图片名称
+      imgBaseUrl: "http://127.0.0.1:5000/upload/imgs/acc_img/" // 图片所在服务的文件夹的位置【目录】
     };
   },
-  data() {
-    return {
-      imageUrl: ""
-    };
-  },
+
   methods: {
     handleAvatarSuccess(res) {
       //上传头像响应数据
+      console.log(res);
       let { code, msg, imgUrl } = res;
+      if (code === 0) {
+        this.$message({ type: "success", message: msg });
+        this.imgUrl = imgUrl;
+      }
     },
     beforeAvatarUpload(file) {
+      // 上传文件之前 对文件的大小 类型 进行限制。
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -72,6 +77,12 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
+    },
+    async modifyAvatar() {
+      let { code } = await avatarEdit({ imgUrl: this.imgUrl });
+      if (code === 0) {
+        this.$bus.$emit("update_avatar");
+      }
     }
   },
   created() {
@@ -91,7 +102,7 @@ export default {
     line-height: 60px;
     border-bottom: 1px solid #ccc;
   }
-  .avatar {
+  .avatar-box {
     padding: 20px 0px;
     /deep/ .avatar-uploader .el-upload {
       margin: 20px 0;

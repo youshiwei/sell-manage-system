@@ -22,7 +22,7 @@
               <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-avatar :src=imgUrl></el-avatar>
+          <el-avatar :src="imgUrl"></el-avatar>
         </div>
       </el-col>
     </el-row>
@@ -74,6 +74,10 @@ export default {
   created() {
     this.fetchData();
     this.calcBread();
+    // 接收个人中心的通知
+    this.$bus.$on("update_avatar", () => {
+      this.fetchData();
+    });
   },
   watch: {
     "$route.path"() {
