@@ -58,7 +58,6 @@ export default {
   methods: {
     handleAvatarSuccess(res) {
       //上传头像响应数据
-      console.log(res);
       let { code, msg, imgUrl } = res;
       if (code === 0) {
         this.$message({ type: "success", message: msg });

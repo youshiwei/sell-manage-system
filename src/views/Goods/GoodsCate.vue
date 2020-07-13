@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <h1 slot="title">
       <span>商品分类</span>
-      <el-button @click="handleAddCate" size="mini" type="primary">添加分类</el-button>
+      <el-button @click="dialogVisible = true" size="mini" type="primary">添加分类</el-button>
     </h1>
     <!-- 内容 -->
     <div slot="content">
@@ -60,7 +60,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="handleAddCate">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -85,7 +85,7 @@ export default {
     };
   },
   methods: {
-    // 获取表格数据
+    // 获取商品分类
     async fetchData() {
       let { data, total } = await getGoodsCate({
         currentPage: this.currentPage,
@@ -120,15 +120,33 @@ export default {
       }
     },
     // 删除分类
-    async handleDelete(row) {
-      let { code } = await delCate({ id: row.id });
+    handleDelete(row) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          let { code } = await delCate({ id: row.id });
+          if (code === 0) {
+            this.fetchData();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    // 添加分类
+    async handleAddCate() {
+      this.dialogVisible = false;
+      // 发送添加商品分类请求
+      let { code } = await addCate(this.addForm);
       if (code === 0) {
         this.fetchData();
       }
-    },
-    // 添加分类
-    handleAddCate() {
-      this.dialogVisible = true;
     }
   },
   created() {

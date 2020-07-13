@@ -22,5 +22,26 @@ export function delCate(params) {
 export function addCate(params) {
     return req.post("/goods/addcate", params)
 }
+/* 查询商品分类 */
+export function getGoodsCateName(params) {
+    return req.get("/goods/categories", params)
+}
+/* 商品添加 */
+export function addGoods(params) {
+    return req.post("/goods/add", params)
+}
+/* 获取商品列表 */
+export function getGoodsList(params) {
+    return req.get("/goods/list", params)
+}
+/* 删除商品 */
+export function delGoodsItem(params) {
+    return req.get("/goods/del", params)
+}
+/* 修改商品 */
+export function modifyGoodsItem(params) {
+    return req.post("/goods/edit", params)
+}
+
 
 
