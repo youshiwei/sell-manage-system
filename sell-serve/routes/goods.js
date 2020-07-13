@@ -102,15 +102,27 @@ router.post("/add", (req, res) => {
 
 /* 获取商品列表 */
 router.get("/list", (req, res) => {
-  let { currentPage, pageSize } = req.query;
+  let { currentPage, pageSize, name, category } = req.query;
 
   if (!currentPage || !pageSize) {
     res.send({ code: 5001, msg: "参数错误!" });
     return;
   }
 
-  let sql = `select * from goods order by ctime desc`;
+  let sql = `select * from goods where 1 = 1`;
   let total;
+
+  if (name) {
+    sql += ` and name like "%${name}%"`;
+  }
+
+  if (category) {
+    sql += ` and category like "%${category}%"`
+  }
+
+  sql += ` order by ctime desc`;
+
+  console.log(sql)
 
   conn.query(sql, (err, data) => {
     if (err) throw err;

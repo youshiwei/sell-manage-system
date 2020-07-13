@@ -28,3 +28,16 @@ export function editAccount(params) {
 export function batchDelAccount(params) {
     return req.get("users/batchdel", params)
 }
+/* 检查旧密码 */
+export function checkOldPwd(params) {
+    return req.get("users/checkoldpwd", params)
+}
+/* 修改密码 */
+export function modifyPwd(params) {
+    return req.post("users/editpwd", params)
+}
+/* 获取用户信息 */
+export function getPersonalInfo() {
+    return req.get("users/info")
+}
+

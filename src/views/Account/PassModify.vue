@@ -40,11 +40,27 @@
 <script>
 import { Acc_Reg, Pwd_Reg } from "@/utils/reg";
 import Panel from "@/components/Panel/Panel.vue";
+import { checkOldPwd, modifyPwd } from "@/api/account";
+import local from "@/utils/local";
 export default {
   components: {
     Panel
   },
   data() {
+    // 旧密码
+    const oldValidate = async (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入原密码"));
+      } else {
+        let { code } = await checkOldPwd({ oldPwd: value });
+        if (code === "00") {
+          callback();
+        } else {
+          callback(new Error("原密码错误，请重新输入"));
+        }
+      }
+    };
+    // 新密码
     const pwdValidate = (rule, value, callback) => {
       if (!value) {
         callback(new Error("请输入新密码"));
@@ -59,6 +75,7 @@ export default {
         callback();
       }
     };
+    // 确认密码
     const confirmValidate = (rule, value, callback) => {
       if (!value) {
         callback(new Error("请再次输入新密码"));
@@ -75,7 +92,7 @@ export default {
         confirmPwd: ""
       },
       rules: {
-        oldPwd: { required: true, message: "请输入原密码", trigger: "blur" },
+        oldPwd: { validator: oldValidate, trigger: "blur" },
         newPwd: { validator: pwdValidate, trigger: "blur" },
         confirmPwd: { validator: confirmValidate, trigger: "blur" }
       }
@@ -83,11 +100,17 @@ export default {
   },
   methods: {
     submitForm() {
-      this.$refs.modifyForm.validate(val => {
+      this.$refs.modifyForm.validate(async val => {
         if (val) {
-          console.log("可以修改");
+          let { code } = await modifyPwd({ newPwd: this.modifyForm.newPwd });
+          if (code === 0) {
+            // 修改密码成功，清除本地，跳转到登录
+            local.clear();
+            this.$router.push("/login");
+          }
         } else {
           console.log("修改失败");
+          return false;
         }
       });
     },

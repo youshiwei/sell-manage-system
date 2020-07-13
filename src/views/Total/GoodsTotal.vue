@@ -1,15 +1,25 @@
 <template>
   <div class="goods-total">
     <div class="date-scope">
-      <span>时间范围</span>
-      <el-date-picker
-        v-model="value1"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      ></el-date-picker>
-      <el-button type="primary">查询</el-button>
+      <!-- 查询表单 -->
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <!-- 时间范围 -->
+        <el-form-item label="时间范围">
+          <el-date-picker
+            v-model="value2"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="right"
+          ></el-date-picker>
+        </el-form-item>
+        <!-- 查询按钮 -->
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="goods-chart" ref="dataEcharts"></div>
   </div>
@@ -19,6 +29,7 @@
 export default {
   data() {
     return {
+      value2: "",
       pickerOptions: {
         shortcuts: [
           {
@@ -49,9 +60,7 @@ export default {
             }
           }
         ]
-      },
-      value1: "",
-      value2: ""
+      }
     };
   },
   methods: {
@@ -167,7 +176,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     padding-right: 200px;
-    height: 600px;
+    height: 500px;
     background-color: #fff;
   }
 }

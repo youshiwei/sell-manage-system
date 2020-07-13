@@ -264,7 +264,7 @@ router.get("/info", (req, res) => {
     if (data.length) {
       data[0].imgUrl =
         "http://127.0.0.1:5000/upload/imgs/acc_img/" + data[0].imgUrl;
-      res.send({ accountInfo: data[0] });
+      res.send({  ...data[0] });
     }
   });
 });

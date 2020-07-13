@@ -14,7 +14,7 @@
         <div class="user">
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              你好，黑土西西
+              你好，{{account}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -22,7 +22,7 @@
               <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-avatar src="@/assets/imgs/we.jpg"></el-avatar>
+          <el-avatar :src=imgUrl></el-avatar>
         </div>
       </el-col>
     </el-row>
@@ -31,10 +31,13 @@
 
 <script>
 import local from "@/utils/local";
+import { getPersonalInfo } from "@/api/account";
 export default {
   data() {
     return {
-      breadArr: [] //面包屑数组
+      breadArr: [], //面包屑数组
+      account: "",
+      imgUrl: ""
     };
   },
   methods: {
@@ -60,9 +63,16 @@ export default {
         local.clear(); //清空本地
         this.$router.push("/login"); //跳转到登录
       }
+    },
+    async fetchData() {
+      let res = await getPersonalInfo();
+      this.account = res.account;
+      this.imgUrl = res.imgUrl;
+      local.set("user", res); //用户信息存入本地
     }
   },
   created() {
+    this.fetchData();
     this.calcBread();
   },
   watch: {
