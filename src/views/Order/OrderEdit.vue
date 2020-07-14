@@ -2,18 +2,24 @@
   <Panel>
     <h1 slot="title">订单编辑</h1>
     <div slot="content">
-      <el-form label-width="80px" size="small" style="width:50%">
+      <el-form inline label-width="70px" size="small" style="width:100%">
         <!-- 订单id -->
         <el-form-item label="订单ID">
-          <el-input v-model="currentOrderEdit.id"></el-input>
+          <el-input disabled v-model="currentOrderEdit.id"></el-input>
         </el-form-item>
         <!-- 订单号 -->
         <el-form-item label="订单号">
-          <el-input v-model="currentOrderEdit.orderNo"></el-input>
+          <el-input disabled v-model="currentOrderEdit.orderNo"></el-input>
         </el-form-item>
         <!-- 下单时间 -->
         <el-form-item label="下单时间">
-          <el-input v-model="currentOrderEdit.orderTime"></el-input>
+          <el-date-picker
+            disabled
+            v-model="currentOrderEdit.orderTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="选择日期时间"
+          ></el-date-picker>
         </el-form-item>
         <!-- 联系电话 -->
         <el-form-item label="联系电话">
@@ -29,7 +35,12 @@
         </el-form-item>
         <!-- 送达时间 -->
         <el-form-item label="送达时间">
-          <el-input v-model="currentOrderEdit.deliveryTime"></el-input>
+          <el-date-picker
+            v-model="currentOrderEdit.deliveryTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="选择日期时间"
+          ></el-date-picker>
         </el-form-item>
         <!-- 备注 -->
         <el-form-item label="备注">
@@ -41,15 +52,22 @@
         </el-form-item>
         <!-- 订单状态 -->
         <el-form-item label="订单状态">
-          <el-input v-model="currentOrderEdit.orderState"></el-input>
+          <el-select v-model="currentOrderEdit.orderState">
+            <el-option value="已受理">已受理</el-option>
+            <el-option value="派送中">派送中</el-option>
+            <el-option value="已完成">已完成</el-option>
+          </el-select>
         </el-form-item>
       </el-form>
+      <el-button @click="handleSubmit" type="success">提交</el-button>
     </div>
   </Panel>
 </template>
 
 <script>
 import Panel from "@/components/Panel/Panel.vue";
+import local from "@/utils/local";
+import { modifyOrder } from "@/api/order";
 export default {
   components: {
     Panel
@@ -58,6 +76,17 @@ export default {
     return {
       currentOrderEdit: {}
     };
+  },
+  methods: {
+    async handleSubmit() {
+      let { code } = await modifyOrder(this.currentOrderEdit);
+      if (code === 0) {
+        this.$router.push("/order/order-list");
+      }
+    }
+  },
+  created() {
+    this.currentOrderEdit = local.get("orderData");
   }
 };
 </script>

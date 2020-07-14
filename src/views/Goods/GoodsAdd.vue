@@ -42,7 +42,7 @@
         </el-form-item>
         <!-- 添加商品按钮 -->
         <el-form-item label>
-          <el-button type="primary" @click="handleAddGoods">添加商品</el-button>
+          <el-button size="small" type="primary" @click="handleAddGoods">添加商品</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -52,6 +52,7 @@
 <script>
 import Panel from "@/components/Panel/Panel.vue";
 import { addGoods, getGoodsCateName } from "@/api/goods";
+import local from "@/utils/local";
 export default {
   components: {
     Panel
@@ -101,6 +102,13 @@ export default {
   },
   async created() {
     let { categories } = await getGoodsCateName();
+    local.set(
+      "categories",
+      categories.map(v => {
+        return v.cateName;
+      })
+    );
+
     this.categories = categories; //数组
   }
 };
@@ -121,14 +129,14 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
   text-align: center;
 }
 .avatar {
-  width: 178px;
-  height: 178px;
+  width: 100px;
+  height: 100px;
   display: block;
 }
 </style>

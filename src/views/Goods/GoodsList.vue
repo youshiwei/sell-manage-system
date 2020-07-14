@@ -4,6 +4,24 @@
     <h1 slot="title">商品列表</h1>
     <!-- 内容 -->
     <div slot="content">
+      <!-- 商品查询表单 -->
+      <el-form size="small" inline>
+        <!-- 商品名称 -->
+        <el-form-item label="商品名称">
+          <el-input v-model="searchForm.name"></el-input>
+        </el-form-item>
+        <!-- 商品分类 -->
+        <el-form-item label="商品分类">
+          <el-select v-model="searchForm.category">
+            <el-option v-for="v in categories" :key="v" :value="v">{{ v }}</el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 查询按钮 -->
+        <el-form-item>
+          <el-button @click="handleSearch" type="primary">查询</el-button>
+          <el-button @click="handleReset">重置</el-button>
+        </el-form-item>
+      </el-form>
       <!-- 商品列表 -->
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="expand">
@@ -95,11 +113,24 @@
           </el-form-item>
           <!-- 商品图片 -->
           <el-form-item label="商品图片" label-width="80px" size="small">
-            <el-input v-model="editForm.imgUrl"></el-input>
+            <el-upload
+              class="avatar-uploader"
+              action="http://127.0.0.1:5000/goods/goods_img_upload"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img
+                v-if="imgBaseUrl+editForm.imgUrl"
+                :src="imgBaseUrl+editForm.imgUrl"
+                class="avatar"
+              />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
           <!-- 商品描述 -->
           <el-form-item label="商品描述" label-width="80px" size="small">
-            <el-input type="textarea" v-model="editForm.goodsDesc"></el-input>
+            <el-input type="textarea" autosize v-model="editForm.goodsDesc"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -115,6 +146,7 @@
 import Panel from "@/components/Panel/Panel.vue";
 import { getGoodsList, delGoodsItem, modifyGoodsItem } from "@/api/goods";
 import Moment from "moment";
+import local from "@/utils/local";
 export default {
   components: {
     Panel
@@ -127,7 +159,12 @@ export default {
       pageSize: 5,
       total: 0,
       editForm: {},
-      tableData: []
+      tableData: [],
+      categories: [],
+      searchForm: {
+        name: "",
+        category: ""
+      }
     };
   },
   methods: {
@@ -135,7 +172,9 @@ export default {
     async fetchData() {
       let { data, total } = await getGoodsList({
         currentPage: this.currentPage,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        name: this.searchForm.name,
+        category: this.searchForm.category
       });
       // 处理价格  xx.xx
       data.forEach(v => {
@@ -158,7 +197,6 @@ export default {
       }
       this.dialogVisible = false;
     },
-
     // 删除
     handleDelete(row) {
       // 优化删除体验
@@ -188,6 +226,41 @@ export default {
     handleCurrentChange(page) {
       this.currentPage = page;
       this.fetchData(); //改变当前页调用一次
+    },
+    // 查询
+    handleSearch() {
+      this.currentPage = 1;
+      this.fetchData();
+    },
+    // 重置
+    handleReset() {
+      this.searchForm = {
+        name: "",
+        category: ""
+      };
+      this.handleSearch();
+    },
+    // 图片上传设置
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG/PNG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    // 图片上传回调函数
+    handleAvatarSuccess(res) {
+      //上传图片响应数据
+      let { code, msg, imgUrl } = res;
+      if (code === 0) {
+        this.$message({ type: "success", message: msg });
+        this.editForm.imgUrl = imgUrl;
+      }
     }
   },
   filters: {
@@ -197,6 +270,7 @@ export default {
   },
   created() {
     this.fetchData(); //进入页面调用一次
+    this.categories = local.get("categories");
   }
 };
 </script>
@@ -221,6 +295,29 @@ export default {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+  }
+  /deep/.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
   }
 }
 </style>

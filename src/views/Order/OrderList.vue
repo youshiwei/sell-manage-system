@@ -134,6 +134,7 @@
 <script>
 import { getOrderList, getOrderDetail } from "@/api/order";
 import Moment from "moment";
+import local from "@/utils/local";
 export default {
   data() {
     return {
@@ -175,7 +176,6 @@ export default {
     },
     // 订单详情
     async handleDetail(id) {
-      console.log(id);
       this.dialogVisible = true;
       let { data } = await getOrderDetail({ id });
       data.orderTime = Moment(data.orderTime).format("YYYY-MM-DD HH:mm:ss");
@@ -185,7 +185,9 @@ export default {
       this.currentOrderDetail = data;
     },
     // 订单编辑
-    handleEdit() {
+    async handleEdit(id) {
+      let { data } = await getOrderDetail({ id });
+      local.set("orderData", data);
       this.$router.push("/order/order-edit");
     },
     // 查询
@@ -219,6 +221,8 @@ export default {
 
 <style lang="less" scoped>
 .order-list {
+  border-radius: 4px;
+  box-shadow: 0px 0px 3px #ccc;
   background-color: #fff;
   padding-bottom: 20px;
 }

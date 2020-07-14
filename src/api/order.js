@@ -12,4 +12,8 @@ export function getOrderList(params) {
 export function getOrderDetail(params) {
     return req.get("/order/detail", params)
 }
+/* 修改订单 */
+export function modifyOrder(params) {
+    return req.post("/order/edit", params)
+}
 
