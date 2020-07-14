@@ -1,7 +1,7 @@
 <template>
   <div class="order-list">
     <!-- 查询表单 -->
-    <el-form style="padding:20px;" :inline="true" :model="searchForm" class="demo-form-inline">
+    <el-form size="small" style="padding:20px;" inline :model="searchForm" class="demo-form-inline">
       <!-- 订单号 -->
       <el-form-item label="订单号">
         <el-input v-model="searchForm.orderNo" placeholder="订单号"></el-input>
@@ -66,7 +66,7 @@
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="handleDetail(scope.row.id)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button @click="handleEdit(scope.row.id)" type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,16 +79,66 @@
       layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
+    <!-- 查看订单详情模态框 -->
+    <el-dialog title="订单详情" :visible.sync="dialogVisible" width="50%">
+      <el-form disabled inline label-width="120px">
+        <!-- 订单id -->
+        <el-form-item label="订单ID">
+          <el-input v-model="currentOrderDetail.id"></el-input>
+        </el-form-item>
+        <!-- 订单号 -->
+        <el-form-item label="订单号">
+          <el-input v-model="currentOrderDetail.orderNo"></el-input>
+        </el-form-item>
+        <!-- 下单时间 -->
+        <el-form-item label="下单时间">
+          <el-input v-model="currentOrderDetail.orderTime"></el-input>
+        </el-form-item>
+        <!-- 联系电话 -->
+        <el-form-item label="联系电话">
+          <el-input v-model="currentOrderDetail.phone"></el-input>
+        </el-form-item>
+        <!-- 收货人 -->
+        <el-form-item label="收货人">
+          <el-input v-model="currentOrderDetail.consignee"></el-input>
+        </el-form-item>
+        <!-- 送货地址 -->
+        <el-form-item label="送货地址">
+          <el-input v-model="currentOrderDetail.deliverAddress"></el-input>
+        </el-form-item>
+        <!-- 送达时间 -->
+        <el-form-item label="送达时间">
+          <el-input v-model="currentOrderDetail.deliveryTime"></el-input>
+        </el-form-item>
+        <!-- 备注 -->
+        <el-form-item label="备注">
+          <el-input v-model="currentOrderDetail.remarks"></el-input>
+        </el-form-item>
+        <!-- 订单金额 -->
+        <el-form-item label="订单金额">
+          <el-input v-model="currentOrderDetail.orderAmount"></el-input>
+        </el-form-item>
+        <!-- 订单状态 -->
+        <el-form-item label="订单状态">
+          <el-input v-model="currentOrderDetail.orderState"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getOrderList } from "@/api/order";
+import { getOrderList, getOrderDetail } from "@/api/order";
 import Moment from "moment";
 export default {
   data() {
     return {
       total: 0,
+      dialogVisible: false,
       currentPage: 1,
       pageSize: 5,
       searchForm: {
@@ -98,7 +148,8 @@ export default {
         orderState: "",
         date: []
       },
-      tableData: []
+      tableData: [],
+      currentOrderDetail: {}
     };
   },
   methods: {
@@ -123,7 +174,20 @@ export default {
       this.total = total;
     },
     // 订单详情
-    handleDetail(id) {},
+    async handleDetail(id) {
+      console.log(id);
+      this.dialogVisible = true;
+      let { data } = await getOrderDetail({ id });
+      data.orderTime = Moment(data.orderTime).format("YYYY-MM-DD HH:mm:ss");
+      data.deliveryTime = Moment(data.deliveryTime).format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      this.currentOrderDetail = data;
+    },
+    // 订单编辑
+    handleEdit() {
+      this.$router.push("/order/order-edit");
+    },
     // 查询
     handleSearch() {
       this.currentPage = 1;

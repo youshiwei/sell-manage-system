@@ -1,7 +1,11 @@
 <template>
   <Panel class="shop">
     <!-- 标题 -->
-    <h1 slot="title">店铺管理</h1>
+    <div slot="title" class="title">
+      <span>店铺管理</span>
+      <el-button size="mini" type="primary">编辑</el-button>
+    </div>
+    <!-- <el-button>编辑</el-button> -->
     <!-- 内容 -->
     <div slot="content">
       <el-form :model="shopForm" ref="shopForm" label-width="68px" style="width:400px">
@@ -122,4 +126,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>

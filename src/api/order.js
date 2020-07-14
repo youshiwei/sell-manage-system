@@ -8,3 +8,8 @@ import req from "@/utils/request"
 export function getOrderList(params) {
     return req.get("/order/list", params)
 }
+/* 获取订单详情 */
+export function getOrderDetail(params) {
+    return req.get("/order/detail", params)
+}
+

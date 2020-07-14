@@ -99,7 +99,7 @@
           </el-form-item>
           <!-- 商品描述 -->
           <el-form-item label="商品描述" label-width="80px" size="small">
-            <el-input v-model="editForm.goodsDesc"></el-input>
+            <el-input type="textarea" v-model="editForm.goodsDesc"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -205,6 +205,13 @@ export default {
 .goods-list {
   .demo-table-expand {
     font-size: 0;
+  }
+  /deep/.el-table_1_column_6 {
+    .cell {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
   .demo-table-expand label {
     width: 90px;
