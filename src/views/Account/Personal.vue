@@ -29,7 +29,7 @@
           :show-file-list="false"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="imgUrl" :src="imgBaseUrl+imgUrl" class="avatar" />
+          <img v-if="userinfo.imgUrl" :src="userinfo.imgUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <el-button @click="modifyAvatar" type="primary" size="small">确认修改</el-button>
@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       userinfo: {},
-      imgUrl: "", //图片名称
       imgBaseUrl: "http://127.0.0.1:5000/upload/imgs/acc_img/" // 图片所在服务的文件夹的位置【目录】
     };
   },
@@ -61,7 +60,7 @@ export default {
       let { code, msg, imgUrl } = res;
       if (code === 0) {
         this.$message({ type: "success", message: msg });
-        this.imgUrl = imgUrl;
+        this.userinfo.imgUrl = this.imgBaseUrl+imgUrl ;
       }
     },
     beforeAvatarUpload(file) {
@@ -78,7 +77,9 @@ export default {
       return isJPG && isLt2M;
     },
     async modifyAvatar() {
-      let { code } = await avatarEdit({ imgUrl: this.imgUrl });
+      let { code } = await avatarEdit({
+        imgUrl: this.userinfo.imgUrl.substr(this.imgBaseUrl.length)
+      });
       if (code === 0) {
         this.$bus.$emit("update_avatar");
       }
@@ -86,6 +87,7 @@ export default {
   },
   created() {
     this.userinfo = local.get("user");
+    console.log(this.userinfo);
   },
   filters: {
     timeformat(time) {

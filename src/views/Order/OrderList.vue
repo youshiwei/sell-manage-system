@@ -25,6 +25,7 @@
       <!-- 下单时间 -->
       <el-form-item label="下单时间">
         <el-date-picker
+          value-format="yyyy-MM-dd HH:mm:ss"
           v-model="searchForm.date"
           type="datetimerange"
           range-separator="至"
@@ -35,7 +36,11 @@
       </el-form-item>
       <!-- 查询按钮 -->
       <el-form-item>
-        <el-button type="primary" @click="search">查询</el-button>
+        <el-button type="primary" @click="handleSearch">查询</el-button>
+      </el-form-item>
+      <!-- 重置按钮 -->
+      <el-form-item>
+        <el-button @click="handleReset">重置</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->
@@ -60,7 +65,7 @@
       <el-table-column prop="orderState" label="订单状态" width="120"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button @click="handleDetail(scope.row.id)" type="text" size="small">查看</el-button>
           <el-button type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
@@ -68,7 +73,6 @@
     <!-- 分页 -->
     <el-pagination
       style="margin-top:20px;padding-left:20px;"
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-size="pageSize"
@@ -92,7 +96,7 @@ export default {
         consignee: "",
         phone: "",
         orderState: "",
-        date: ""
+        date: []
       },
       tableData: []
     };
@@ -100,6 +104,7 @@ export default {
   methods: {
     // 获取数据列表
     async fetchData() {
+      if (!this.searchForm.date) this.searchForm.date = [];
       let { data, total } = await getOrderList({
         currentPage: this.currentPage,
         pageSize: this.pageSize,
@@ -107,7 +112,7 @@ export default {
         consignee: this.searchForm.consignee,
         phone: this.searchForm.phone,
         orderState: this.searchForm.orderState,
-        date: this.searchForm.date
+        date: JSON.stringify(this.searchForm.date)
       });
       // 处理下单时间，送达时间
       data.forEach(v => {
@@ -117,10 +122,26 @@ export default {
       this.tableData = data;
       this.total = total;
     },
-    handleClick() {},
-    search() {
+    // 订单详情
+    handleDetail(id) {},
+    // 查询
+    handleSearch() {
+      this.currentPage = 1;
       this.fetchData();
     },
+    // 重置
+    handleReset() {
+      this.searchForm = {
+        orderNo: "",
+        consignee: "",
+        phone: "",
+        orderState: "",
+        date: []
+      };
+      // 重置筛选条件，再查询一次
+      this.handleSearch();
+    },
+    // 改变当前页，刷新数据
     handleCurrentChange(page) {
       this.currentPage = page;
       this.fetchData();
