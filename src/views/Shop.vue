@@ -103,6 +103,9 @@
     </div>
   </Panel>
 </template>
+    </div>
+  </Panel>
+</template>
 
 <script>
 import Panel from "@/components/Panel/Panel.vue";

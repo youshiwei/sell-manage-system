@@ -222,7 +222,7 @@ export default {
 <style lang="less" scoped>
 .order-list {
   border-radius: 4px;
-  box-shadow: 0px 0px 3px #ccc;
+  box-shadow: 0px 0px 5px #ccc;
   background-color: #fff;
   padding-bottom: 20px;
 }
