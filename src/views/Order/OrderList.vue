@@ -80,7 +80,7 @@
       :total="total"
     ></el-pagination>
     <!-- 查看订单详情模态框 -->
-    <el-dialog title="订单详情" :visible.sync="dialogVisible" width="50%">
+    <el-dialog title="订单详情" :visible.sync="dialogVisible" width="60%">
       <el-form disabled inline label-width="120px">
         <!-- 订单id -->
         <el-form-item label="订单ID">

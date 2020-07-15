@@ -2,7 +2,7 @@
   <Panel>
     <h1 slot="title">订单编辑</h1>
     <div slot="content">
-      <el-form inline label-width="70px" size="small" style="width:100%">
+      <el-form inline label-width="70px" style="width:100%">
         <!-- 订单id -->
         <el-form-item label="订单ID">
           <el-input disabled v-model="currentOrderEdit.id"></el-input>

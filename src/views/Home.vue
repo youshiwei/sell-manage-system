@@ -9,34 +9,38 @@
 
 <script>
 import Card from "@/components/Card/Card.vue";
+import { getTotalData } from "@/api/total";
 export default {
   components: {
     Card
   },
   data() {
     return {
+      xData: [],
+      orderData: [],
+      amountData: [],
       CardData: [
         {
           title: "总订单",
-          value: "102,400",
+          value: 0,
           icon: "icon-zongdingdanfenshu",
           color: "blue"
         },
         {
           title: "总销售额",
-          value: "102,400",
+          value: 0,
           icon: "icon-leijizongxiaoshoue",
           color: "purple"
         },
         {
           title: "今日订单",
-          value: "102,400",
+          value: 0,
           icon: "icon-icon-1",
           color: "skyblue"
         },
         {
           title: "今日销售额",
-          value: "102,400",
+          value: 0,
           icon: "icon-xiaoshoue-pressed",
           color: "green"
         }
@@ -112,6 +116,21 @@ export default {
       };
       myChart.setOption(option);
     }
+  },
+  async created() {
+    let {
+      totalOrder,
+      totalAmount,
+      todayOrder,
+      totayAmount,
+      xData,
+      orderData,
+      amountData
+    } = await getTotalData();
+    let value = [totalOrder, totalAmount, todayOrder, totayAmount];
+    value.forEach((v, i) => {
+      this.CardData[i].value = v;
+    });
   },
   mounted() {
     this.getEchartsData();

@@ -116,7 +116,6 @@ export default {
 
 <style lang="less" scoped>
 /deep/ .avatar-uploader .el-upload {
-  margin: 20px 0;
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
