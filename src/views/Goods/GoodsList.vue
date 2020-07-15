@@ -19,7 +19,7 @@
         <!-- 查询按钮 -->
         <el-form-item>
           <el-button @click="handleSearch" type="primary">查询</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button @click="handleReset" type="success">重置</el-button>
         </el-form-item>
       </el-form>
       <!-- 商品列表 -->

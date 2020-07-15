@@ -40,7 +40,7 @@
       </el-form-item>
       <!-- 重置按钮 -->
       <el-form-item>
-        <el-button @click="handleReset">重置</el-button>
+        <el-button type="success" @click="handleReset">重置</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->

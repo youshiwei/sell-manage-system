@@ -90,7 +90,6 @@ export default {
       if (code === 0) {
         this.$message({ type: "success", message: msg });
         this.goods.imgUrl = imgUrl;
-        console.log(this.goods);
       }
     },
     async handleAddGoods() {
