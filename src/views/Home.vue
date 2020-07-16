@@ -3,22 +3,22 @@
     <div class="record">
       <Card class="card" v-for="item in CardData" :key="item.title" :CardItem="item"></Card>
     </div>
-    <div ref="dataEcharts" class="total-data"></div>
+    <!-- 首页报表 -->
+    <LineCharts :options="options" />
   </div>
 </template>
 
 <script>
 import Card from "@/components/Card/Card.vue";
+import LineCharts from "@/components/Charts/LineCharts/HomeLineCharts.vue";
 import { getTotalData } from "@/api/total";
 export default {
   components: {
-    Card
+    Card,
+    LineCharts
   },
   data() {
     return {
-      xData: [],
-      orderData: [],
-      amountData: [],
       CardData: [
         {
           title: "总订单",
@@ -44,78 +44,10 @@ export default {
           icon: "icon-xiaoshoue-pressed",
           color: "green"
         }
-      ]
+      ],
+      options: {},
+      flag: false
     };
-  },
-  methods: {
-    getEchartsData() {
-      var myChart = this.$echarts.init(this.$refs.dataEcharts);
-      var option = {
-        title: {
-          text: "数据统计"
-        },
-        tooltip: {
-          trigger: "axis"
-        },
-        legend: {
-          data: ["订单", "销售额", "注册人数", "管理人员"]
-        },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: [
-            "2020/02/02",
-            "2020/02/02",
-            "2020/02/02",
-            "2020/02/02",
-            "2020/02/02",
-            "2020/02/02",
-            "2020/02/02"
-          ]
-        },
-        yAxis: {
-          type: "value"
-        },
-        series: [
-          {
-            name: "订单",
-            type: "line",
-            stack: "总量",
-            data: [120, 132, 101, 134, 90, 230, 210]
-          },
-          {
-            name: "销售额",
-            type: "line",
-            stack: "总量",
-            data: [220, 182, 191, 234, 290, 330, 310]
-          },
-          {
-            name: "注册人数",
-            type: "line",
-            stack: "总量",
-            data: [150, 232, 201, 154, 190, 330, 410]
-          },
-          {
-            name: "管理人员",
-            type: "line",
-            stack: "总量",
-            data: [320, 332, 301, 334, 390, 330, 320]
-          }
-        ]
-      };
-      myChart.setOption(option);
-    }
   },
   async created() {
     let {
@@ -127,13 +59,31 @@ export default {
       orderData,
       amountData
     } = await getTotalData();
+    // 渲染卡片
     let value = [totalOrder, totalAmount, todayOrder, totayAmount];
     value.forEach((v, i) => {
       this.CardData[i].value = v;
     });
-  },
-  mounted() {
-    this.getEchartsData();
+    // 准备echarts数据,通过组件通信，传给子组件
+    this.options = {
+      title: "数据统计",
+      legend: ["订单", "销售额"],
+      xAxis: xData,
+      series: [
+        {
+          name: "订单",
+          type: "line",
+          stack: "总量",
+          data: orderData
+        },
+        {
+          name: "销售额",
+          type: "line",
+          stack: "总量",
+          data: amountData
+        }
+      ]
+    };
   }
 };
 </script>
@@ -149,11 +99,6 @@ export default {
     .card {
       width: calc(25% - 15px);
     }
-  }
-  .total-data {
-    width: 100%;
-    background-color: #fff;
-    height: 400px;
   }
   // @media screen and (max-width: 1200px) {
   //   .total-data {
