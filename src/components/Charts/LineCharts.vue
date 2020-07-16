@@ -52,7 +52,12 @@ export default {
     this.getEchartsData(this.options);
   },
   watch: {
-    options() {}
+    options: {
+      handler(newVal, oldVal) {
+        this.getEchartsData(newVal); // 如果数据变化了 重新使用新数据绘制报表
+      },
+      deep: true // 深度监听
+    }
   }
 };
 </script>

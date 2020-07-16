@@ -10,7 +10,7 @@
 
 <script>
 import Card from "@/components/Card/Card.vue";
-import LineCharts from "@/components/Charts/LineCharts/HomeLineCharts.vue";
+import LineCharts from "@/components/Charts/LineCharts.vue";
 import { getTotalData } from "@/api/total";
 export default {
   components: {
