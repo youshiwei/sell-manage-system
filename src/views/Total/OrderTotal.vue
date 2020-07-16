@@ -2,13 +2,13 @@
   <div class="order-total">
     <div class="date-scope">
       <!-- 查询表单 -->
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form :inline="true" class="demo-form-inline">
         <!-- 时间范围 -->
         <el-form-item label="时间范围">
           <el-date-picker
-            v-model="value2"
+            v-model="date"
+            value-format="yyyy-MM-dd HH:mm:ss"
             type="datetimerange"
-            :picker-options="pickerOptions"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -17,184 +17,56 @@
         </el-form-item>
         <!-- 查询按钮 -->
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="search">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div class="order-chart" ref="dataEcharts"></div>
+    <line-charts :options="options" />
   </div>
 </template>
 
 <script>
+import { getOrderData } from "@/api/total";
+import Moment from "moment";
+import LineCharts from "@/components/Charts/LineCharts.vue";
 export default {
+  components: {
+    LineCharts
+  },
   data() {
     return {
-      value2: "",
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: "最近一周",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "最近三个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
+      date: [],
+      options: {
+        title: "订单统计",
+        legend: ["订单金额"],
+        xAxis: [],
+        series: []
       }
     };
   },
   methods: {
-    getEchartsData() {
-      var myChart = this.$echarts.init(this.$refs.dataEcharts);
-      var option = {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            crossStyle: {
-              color: "#999"
-            }
-          }
-        },
-        toolbox: {
-          feature: {
-            dataView: { show: true, readOnly: false },
-            magicType: { show: true, type: ["line", "bar"] },
-            restore: { show: true },
-            saveAsImage: { show: true }
-          }
-        },
-        legend: {
-          data: ["蒸发量", "降水量", "平均温度"]
-        },
-        xAxis: [
-          {
-            type: "category",
-            data: [
-              "1月",
-              "2月",
-              "3月",
-              "4月",
-              "5月",
-              "6月",
-              "7月",
-              "8月",
-              "9月",
-              "10月",
-              "11月",
-              "12月"
-            ],
-            axisPointer: {
-              type: "shadow"
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: "value",
-            name: "水量",
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-              formatter: "{value} ml"
-            }
-          },
-          {
-            type: "value",
-            name: "温度",
-            min: 0,
-            max: 25,
-            interval: 5,
-            axisLabel: {
-              formatter: "{value} °C"
-            }
-          }
-        ],
-        series: [
-          {
-            name: "蒸发量",
-            type: "bar",
-            data: [
-              2.0,
-              4.9,
-              7.0,
-              23.2,
-              25.6,
-              76.7,
-              135.6,
-              162.2,
-              32.6,
-              20.0,
-              6.4,
-              3.3
-            ]
-          },
-          {
-            name: "降水量",
-            type: "bar",
-            data: [
-              2.6,
-              5.9,
-              9.0,
-              26.4,
-              28.7,
-              70.7,
-              175.6,
-              182.2,
-              48.7,
-              18.8,
-              6.0,
-              2.3
-            ]
-          },
-          {
-            name: "平均温度",
-            type: "line",
-            yAxisIndex: 1,
-            data: [
-              2.0,
-              2.2,
-              3.3,
-              4.5,
-              6.3,
-              10.2,
-              20.3,
-              23.4,
-              23.0,
-              16.5,
-              12.0,
-              6.2
-            ]
-          }
-        ]
-      };
-
-      myChart.setOption(option);
+    search() {
+      this.fetchData();
+    },
+    async fetchData() {
+      let { data } = await getOrderData({
+        date: JSON.stringify(this.date === null ? [] : this.date)
+      });
+      // 数据处理
+      this.options.xAxis = data.map(v =>
+        Moment(v.orderTime).format("YYYY-MM-DD HH:mm:ss")
+      );
+      this.options.series = [
+        {
+          name: "订单金额",
+          type: "line",
+          data: data.map(v => v.orderAmount)
+        }
+      ];
     }
   },
-  mounted() {
-    this.getEchartsData();
+  created() {
+    this.fetchData();
   }
 };
 </script>
