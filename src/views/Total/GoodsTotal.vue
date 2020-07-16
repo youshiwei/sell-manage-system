@@ -37,8 +37,8 @@ export default {
     return {
       date: [],
       options: {
-        title: "订单统计",
-        legend: ["订单金额"],
+        title: "商品统计",
+        legend: ["商品数量"],
         xAxis: [],
         series: []
       }
@@ -58,7 +58,7 @@ export default {
       );
       this.options.series = [
         {
-          name: "订单金额",
+          name: "商品数量",
           type: "bar",
           data: data.map(v => v.orderAmount)
         }

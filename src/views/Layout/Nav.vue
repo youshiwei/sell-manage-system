@@ -2,6 +2,7 @@
   <div class="nav">
     <div class="shop-name">
       <img src="@/assets/imgs/food.svg" alt />
+      <span>商家管理</span>
     </div>
     <el-menu
       :default-active="curActive"
@@ -101,9 +102,10 @@ export default {
   flex: 0 0 200px;
   background-color: #304156;
   .shop-name {
+    color: white;
     font-size: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
   }
   .el-menu {
