@@ -46,7 +46,8 @@ const dynamicRoutes = [
   // 登录
   {
     path: "/login",
-    component: Login
+    component: Login,
+    visible: false
   },
   // 后台界面大布局
   // 首页
@@ -54,7 +55,9 @@ const dynamicRoutes = [
     path: "/",
     component: Layout,
     redirect: "/home",
-    meta: { title: "后台首页" },
+    meta: { title: "后台首页", icon: "el-icon-s-home" },
+
+    visible: true,
     children: [
       {
         path: "/home",
@@ -65,9 +68,10 @@ const dynamicRoutes = [
   // 订单管理
   {
     path: "/order",
+    visible: true,
     component: Layout,
     redirect: "/order/order-list",
-    meta: { title: "订单管理" },
+    meta: { title: "订单管理", icon: "el-icon-s-order" },
     children: [
       {
         path: "/order/order-list",
@@ -85,8 +89,9 @@ const dynamicRoutes = [
   {
     path: "/goods",
     component: Layout,
+    visible: true,
     redirect: "/goods/goods-list",
-    meta: { title: "商品管理" },
+    meta: { title: "商品管理", icon: "el-icon-shopping-bag-1" },
     children: [
       {
         path: "/goods/goods-list",
@@ -108,8 +113,9 @@ const dynamicRoutes = [
   // 店铺管理
   {
     path: "/shop",
+    visible: true,
     component: Layout,
-    meta: { title: "店铺管理" },
+    meta: { title: "店铺管理", icon: "el-icon-s-shop" },
     children: [
       {
         path: "",
@@ -120,9 +126,10 @@ const dynamicRoutes = [
   // 账户管理
   {
     path: "/account",
-    meta: { title: "账户管理", role: ["super", "normal"] },
+    meta: { title: "账户管理", icon: "el-icon-user-solid", role: ["super", "normal"] },
     redirect: "/account/account-list",
     component: Layout,
+    visible: true,
     children: [
       {
         path: "/account/account-add",
@@ -150,8 +157,9 @@ const dynamicRoutes = [
   {
     path: "/total",
     component: Layout,
+    visible: true,
     redirect: "/total/goods-total",
-    meta: { title: "销售统计", role: ["super"] },
+    meta: { title: "销售统计", icon: "el-icon-pie-chart", role: ["super"] },
     children: [
       {
         path: "/total/goods-total",
@@ -168,11 +176,13 @@ const dynamicRoutes = [
   // not found 404
   {
     path: "/404",
+    visible: false,
     component: () => import("@/views/404.vue")
   },
   {
     path: "*",
     redirect: "/404",
+    visible: false,
   }
 
 ]
@@ -217,6 +227,36 @@ function hasPermission(router, role) {
     return true
   }
 }
+
+/**
+ * @description:判断在不在左侧显示
+ * @param {accessRoutes} 当前路由对象
+ * @param {role} 当前角色
+ */
+function isVisible(router, role) {
+  if (router.visible) {
+    return true
+  } else {
+    return false
+  }
+}
+
+/**
+ * @description:计算菜单
+ * @param {accessRoutes} 当前有权限访问的路由 
+ * @param {role} 当前角色 
+ */
+function calcMenus(accessRoutes, role) {
+  let arr = accessRoutes.filter(router => {
+    if (isVisible(router, role)) {
+      return true
+    } else {
+      return false
+    }
+  })
+  return arr
+}
+
 /**
  * @description:计算出当前角色有权限访问的路由
  * @param {dynamicRoutes} 当前所有动态路由
@@ -245,8 +285,13 @@ export function createRoutes() {
   // 计算出有权限访问的路由
   let accessRoutes = calcRoutes(dynamicRoutes, role)
   // 动态添加路由
-  console.log(accessRoutes)
   router.addRoutes(accessRoutes)
+
+  // 计算动态菜单
+  let menus = calcMenus(accessRoutes, role)
+
+  // 存入本地
+  local.set("menus", menus)
 }
 createRoutes()
 export default router
