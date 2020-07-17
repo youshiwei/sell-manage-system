@@ -14,7 +14,7 @@ import local from "@/utils/local"
 
 
 /**
- * 路由配置
+ * 路由配置【默认只配置两个】
  */
 
 const routes = [
@@ -29,6 +29,32 @@ const routes = [
     path: "/",
     component: Layout,
     redirect: "/home",
+    children: [
+      {
+        path: "/home",
+        component: () => import("@/views/Home.vue"),//路由懒加载
+      }
+    ]
+  },
+
+]
+
+/**
+ * 动态路由
+ */
+const dynamicRoutes = [
+  // 登录
+  {
+    path: "/login",
+    component: Login
+  },
+  // 后台界面大布局
+  // 首页
+  {
+    path: "/",
+    component: Layout,
+    redirect: "/home",
+    meta: { title: "后台首页" },
     children: [
       {
         path: "/home",
@@ -94,18 +120,18 @@ const routes = [
   // 账户管理
   {
     path: "/account",
-    meta: { title: "账户管理" },
+    meta: { title: "账户管理", role: ["super", "normal"] },
     redirect: "/account/account-list",
     component: Layout,
     children: [
       {
         path: "/account/account-add",
-        meta: { title: "添加账号" },
+        meta: { title: "添加账号", role: ["super"] },
         component: () => import("@/views/Account/AccountAdd.vue")
       },
       {
         path: "/account/account-list",
-        meta: { title: "账号列表" },
+        meta: { title: "账号列表", role: ["super"] },
         component: () => import("@/views/Account/AccountList.vue")
       },
       {
@@ -125,7 +151,7 @@ const routes = [
     path: "/total",
     component: Layout,
     redirect: "/total/goods-total",
-    meta: { title: "销售统计" },
+    meta: { title: "销售统计", role: ["super"] },
     children: [
       {
         path: "/total/goods-total",
@@ -141,8 +167,12 @@ const routes = [
   },
   // not found 404
   {
-    path: "*",
+    path: "/404",
     component: () => import("@/views/404.vue")
+  },
+  {
+    path: "*",
+    redirect: "/404",
   }
 
 ]
@@ -170,4 +200,53 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+
+
+/**
+ * @description:判断当前路由对象 是否有权限
+ * @param {router} 当前路由对象
+ * @param {role} 当前用户角色
+ * returns:true 有权限 false 没有权限
+ */
+function hasPermission(router, role) {
+  // 如果路由中有meta且meta中有role证明配置了权限
+  if (router.meta && router.meta.role) {
+    return router.meta.role.includes(role)
+  } else {
+    // 否则就是没有配 [没有配置的 默认都有权限]
+    return true
+  }
+}
+/**
+ * @description:计算出当前角色有权限访问的路由
+ * @param {dynamicRoutes} 当前所有动态路由
+ * @param {role} 当前用户角色
+ * @returns:数组 当前可以访问的路由数组
+ */
+function calcRoutes(dynamicRoutes, role) {
+  let arr = dynamicRoutes.filter((router) => {
+    if (hasPermission(router, role)) {
+      if (router.children && router.children.length) {
+        router.children = calcRoutes(router.children, role)
+      }
+      return true
+    } else {
+      return false
+    }
+  })
+  return arr
+}
+
+/**
+ * 根据当前角色，动态创建出当前角色可访问的路由
+ */
+export function createRoutes() {
+  let role = local.get("role")
+  // 计算出有权限访问的路由
+  let accessRoutes = calcRoutes(dynamicRoutes, role)
+  // 动态添加路由
+  console.log(accessRoutes)
+  router.addRoutes(accessRoutes)
+}
+createRoutes()
 export default router

@@ -52,7 +52,7 @@
           </el-form-item>
           <el-form-item label="用户组">
             <el-select v-model="editForm.userGroup">
-              <el-option value="高级管理员">高级管理员</el-option>
+              <el-option value="超级管理员">超级管理员</el-option>
               <el-option value="普通管理员">普通管理员</el-option>
             </el-select>
           </el-form-item>

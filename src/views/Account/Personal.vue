@@ -60,7 +60,7 @@ export default {
       let { code, msg, imgUrl } = res;
       if (code === 0) {
         this.$message({ type: "success", message: msg });
-        this.userinfo.imgUrl = this.imgBaseUrl+imgUrl ;
+        this.userinfo.imgUrl = this.imgBaseUrl + imgUrl;
       }
     },
     beforeAvatarUpload(file) {
@@ -87,7 +87,6 @@ export default {
   },
   created() {
     this.userinfo = local.get("user");
-    console.log(this.userinfo);
   },
   filters: {
     timeformat(time) {

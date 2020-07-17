@@ -31,6 +31,7 @@
 import { Acc_Reg, Pwd_Reg } from "@/utils/reg";
 import { checkLogin } from "@/api/account";
 import local from "@/utils/local";
+import { createRoutes } from "@/router";
 export default {
   data() {
     // 验证账号
@@ -73,13 +74,14 @@ export default {
       this.$refs.loginForm.validate(async validator => {
         if (validator) {
           // 发送登录ajax
-          let { code, msg, token } = await checkLogin(this.loginForm);
+          let { code, msg, token, role } = await checkLogin(this.loginForm);
           if (code === 0) {
+            // 将token、role保存到本地
             local.set("t_k", token);
+            local.set("role", role);
+            createRoutes();
             this.$router.push("/");
           }
-        } else {
-          console.log("前端验证不通过，不可提交");
         }
       });
     },

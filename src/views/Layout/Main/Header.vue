@@ -62,6 +62,8 @@ export default {
         this.$message({ type: "success", message: "哥哥，欢迎下次再来！" });
         local.clear(); //清空本地
         this.$router.push("/login"); //跳转到登录
+        // 刷新浏览器
+        location.reload();
       }
     },
     async fetchData() {
