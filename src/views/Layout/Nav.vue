@@ -18,7 +18,7 @@
         <el-menu-item
           v-if="menu.children && menu.children.length === 1 || menu.path=='/order'"
           :key="menu.path"
-          :index="menu.children && menu.children.lenghth && menu.children[0].path!=='' ? menu.children[0].path : menu.path"
+          :index="menu.children && menu.children.length && menu.children[0].path!=='' ? menu.children[0].path : menu.path"
         >
           <i :class="menu.meta.icon"></i>
           <span slot="title">{{menu.meta.title}}</span>
@@ -77,8 +77,20 @@ export default {
   }
   .el-menu {
     border-right: none;
-    .el-submenu .el-menu-item {
-      background-color: #202f3f !important;
+    .el-menu-item {
+      i {
+        color: #fff;
+      }
+    }
+    .el-submenu {
+      .el-submenu__title {
+        i {
+          color: #fff;
+        }
+      }
+      .el-menu-item {
+        background-color: #202f3f !important;
+      }
     }
   }
 }

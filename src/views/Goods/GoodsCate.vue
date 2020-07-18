@@ -49,7 +49,7 @@
         :total="total"
       ></el-pagination>
       <!-- 添加分类模态框 -->
-      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <el-dialog title="添加分类" :visible.sync="dialogVisible" width="30%">
         <el-form style="width:80%">
           <el-form-item label="分类名称" label-width="80px" size="small">
             <el-input v-model="addForm.cateName"></el-input>

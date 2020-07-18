@@ -97,7 +97,7 @@
         :total="total"
       ></el-pagination>
       <!-- 编辑模态框 -->
-      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <el-dialog title="商品编辑" :visible.sync="dialogVisible" width="30%">
         <el-form style="width:80%">
           <!-- 商品名称 -->
           <el-form-item label="商品名称" label-width="80px" size="small">

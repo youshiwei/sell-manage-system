@@ -61,6 +61,7 @@ const dynamicRoutes = [
     children: [
       {
         path: "/home",
+        meta: { title: "后台首页" },
         component: () => import("@/views/Home.vue"),//路由懒加载
       }
     ]
