@@ -44,6 +44,7 @@ export default {
     calcBread() {
       // 计算面包屑数组
       let arr = [{ title: "首页", path: "/home" }];
+      console.log(this.$route.matched);
       this.$route.matched.forEach(v => {
         if (v.meta && v.meta.title) {
           arr.push({

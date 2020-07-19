@@ -287,7 +287,6 @@ export function createRoutes() {
   let accessRoutes = calcRoutes(dynamicRoutes, role)
   // 动态添加路由
   router.addRoutes(accessRoutes)
-
   // 计算动态菜单
   let menus = calcMenus(accessRoutes, role)
 
